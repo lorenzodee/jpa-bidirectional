@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<root level="WARN" />
+	<!--
+	<logger name="org.springframework" level="INFO" />
+	<logger name="org.testcontainers" level="INFO" />
+	<logger name="com.github.dockerjava" level="WARN" />
+	-->
+</configuration>
