@@ -49,7 +49,7 @@ class OrdersController {
 	@Autowired
 	MessageSource messageSource;
 
-	// If direct field access is to be the default, add this to a @ControllerAdvice
+	// If direct field access is to be the default, move this to a @ControllerAdvice
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
 		binder.initDirectFieldAccess();
@@ -88,19 +88,18 @@ class OrdersController {
 			prepareFormModels(model);
 			return "orders/create";
 		}
-		// By exposing setters, data binding is made easier.
-		// There's no need to define a JavaBean, and manually bind data
-		// it and onto a JPA entity. This can become cumbersome for
-		// nested properties/entities.
 
 		// order.setId(null);
 		order = this.allOrders.save(order);
 		// Or, use application-layer @Transactional @Service to create order
 
+		// @formatter:off
 		/*
-		 * redirectAttrs.addFlashAttribute("message", this.messageSource.getMessage(
-		 * "order.created", new Object[] { order.getId() }, locale));
-		 */
+		redirectAttrs.addFlashAttribute("message",
+				this.messageSource.getMessage("order.created",
+						new Object[] { order.getId() }, locale));
+		*/
+		// @formatter:on
 		return "redirect:/orders";
 	}
 
@@ -128,10 +127,13 @@ class OrdersController {
 		order = this.allOrders.save(order);
 		// Or, use application-layer @Transactional @Service to create order
 
+		// @formatter:off
 		/*
-		 * redirectAttrs.addFlashAttribute("message", this.messageSource.getMessage(
-		 * "order.updated", new Object[] { order.getId() }, locale));
-		 */
+		redirectAttrs.addFlashAttribute("message",
+				this.messageSource.getMessage("order.updated",
+						new Object[] { order.getId() }, locale));
+		*/
+		// @formatter:on
 		return "redirect:/orders";
 	}
 

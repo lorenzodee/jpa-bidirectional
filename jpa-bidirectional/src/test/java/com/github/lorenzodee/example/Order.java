@@ -70,11 +70,8 @@ public class Order {
 
 	// Alternatively, the `@Id` field can be effectively final and read-only.
 	// To do so, Spring MVC controllers must use direct field access to
-	// support x-www-form-urlencoded data binding, and the constructor
-	// must be annotated with `@JsonCreator` to allow Jackson to deserialize
-	// and set the `id` field properly. Unfortunately, Jackson will _not_
-	// use the designated `@JsonCreator` because there is an existing
-	// zero-args constructor.
+	// support x-www-form-urlencoded data binding, and Jackson should use
+	// field-based serialization/deserialization.
 
 	public Order(Long id) {
 		this.id = id;
@@ -90,33 +87,6 @@ public class Order {
 	}
 	*/
 
-	// TODO Can we use a aggregate-specific ID type? E.g. OrderId
-	/*
-
-	// Hide getId() and setId(Long id)
-	// and replace with the getId() and setId(OrderId orderId) below.
-
-	@Transient
-	@JsonIgnore
-	private transient OrderId orderId;
-
-	public OrderId getId() {
-		return this.orderId != null
-				? this.orderId
-				: this.orderId = OrderId.of(this.id);
-	}
-
-	public void setId(OrderId orderId) {
-		this.orderId = orderId;
-		if (this.orderId != null) {
-			this.id = orderId.getValue();
-		}
-		else {
-			this.id = null;
-		}
-	}
-	*/
-
 	public List<OrderItem> getItems() {
 		// No need to return a "copy" or "defensive copy"
 		return this.items;
@@ -127,6 +97,7 @@ public class Order {
 		this.items = items;
 	}
 
+	/*
 	public void handleBiDirectionalAssociations() {
 		if (this.items != null) {
 			this.items.forEach((item) -> {
@@ -136,5 +107,6 @@ public class Order {
 			});
 		}
 	}
+	*/
 
 }

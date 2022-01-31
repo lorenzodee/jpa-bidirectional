@@ -87,9 +87,9 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<configLocation>src/checkstyle/checkstyle.xml</configLocation>
+					<configLocation>../src/checkstyle/checkstyle.xml</configLocation>
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					<propertyExpansion>config_loc=src/checkstyle</propertyExpansion>
+					<propertyExpansion>config_loc=../src/checkstyle</propertyExpansion>
 				</configuration>
 				<!-- By default, binds "checkstyle:check" goal to the "verify" phase -->
 			</plugin>

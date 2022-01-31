@@ -66,9 +66,6 @@ class OrdersApiController {
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.badRequest().build();
 		}
-		// By default, all getters/setters will be used for
-		// JSON de/serialization.
-
 		// Set `@Id` field to null to ensure a new entity is inserted
 		// order.setId(null);
 		new DirectFieldAccessor(order).setPropertyValue("id", null);
@@ -91,9 +88,6 @@ class OrdersApiController {
 		// The "id" should be in the URI instead.
 		// order.setId(id);
 		new DirectFieldAccessor(order).setPropertyValue("id", id);
-
-		// By default, all getters/setters will be used for
-		// JSON de/serialization.
 
 		order = this.allOrders.save(order);
 		return ResponseEntity.noContent().build();

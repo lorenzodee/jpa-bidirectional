@@ -128,6 +128,9 @@ class OrdersApiControllerTests {
 				.andExpect(status().isCreated());
 		// @formatter:on
 
+		// Using @JsonManagedReference and @JsonBackReference makes
+		// Jackson handle the bi-directional associations.
+
 		then(this.allOrders).should().save(this.savedOrder.capture());
 
 		Order order = this.savedOrder.getValue();
@@ -163,6 +166,9 @@ class OrdersApiControllerTests {
 								+ "] }"))
 				.andExpect(status().isNoContent());
 		// @formatter:on
+
+		// Using @JsonManagedReference and @JsonBackReference makes
+		// Jackson handle the bi-directional associations.
 
 		then(this.allOrders).should().save(this.savedOrder.capture());
 

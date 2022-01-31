@@ -30,7 +30,9 @@ import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "order_items", uniqueConstraints = { @UniqueConstraint(columnNames = { "order_id", "product_id" }) })
+@Table(name = "order_items", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "order_id", "product_id" })
+	})
 @SequenceGenerator(name = "order_item_seq", sequenceName = "order_item_seq", allocationSize = 5)
 public class OrderItem {
 
