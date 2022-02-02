@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.lorenzodee.example;
+package com.github.lorenzodee.example.web.api;
 
 import java.net.URI;
 
@@ -37,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.github.lorenzodee.example.domain.model.Order;
+import com.github.lorenzodee.example.domain.model.Orders;
 
 @RestController
 @RequestMapping("/api/orders")

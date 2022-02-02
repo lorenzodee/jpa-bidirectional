@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.lorenzodee.jpa.bidirectional.example;
+package com.github.lorenzodee.example.web;
 
 import java.util.List;
 import java.util.stream.Collectors;

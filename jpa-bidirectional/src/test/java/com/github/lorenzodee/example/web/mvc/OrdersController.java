@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.lorenzodee.example;
+package com.github.lorenzodee.example.web.mvc;
 
 import java.util.Locale;
 
@@ -39,6 +39,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.github.lorenzodee.example.domain.model.Order;
+import com.github.lorenzodee.example.domain.model.Orders;
+
 @Controller
 @RequestMapping("/orders")
 class OrdersController {
@@ -57,7 +60,6 @@ class OrdersController {
 
 	@GetMapping
 	String index(Pageable pageable, Model model) {
-		// Or, use this.allOrders.queryAll(pageable) for a projection
 		model.addAttribute("ordersPage", this.allOrders.findAll(pageable));
 		// In the view, use ${ordersPage.content} to get List<Order>
 		return "orders/index";

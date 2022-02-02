@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.lorenzodee.example;
-
-import java.util.ArrayList;
-import java.util.Optional;
+package com.github.lorenzodee.example.web.mvc;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,27 +28,34 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.lorenzodee.example.domain.model.Order;
+import com.github.lorenzodee.example.domain.model.OrderItem;
+import com.github.lorenzodee.example.domain.model.Orders;
+import com.github.lorenzodee.example.web.BiDirectionalAssociationsHandlerConfiguration;
+import com.github.lorenzodee.example.web.JpaModelAttributeMethodProcessorConfiguration;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
-@WebMvcTest
+@WebMvcTest(controllers = OrdersController.class)
 @Transactional
 @AutoConfigureDataJpa
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
-class OrdersApiControllerTests {
+@Import({ BiDirectionalAssociationsHandlerConfiguration.class,
+	JpaModelAttributeMethodProcessorConfiguration.class })
+class OrdersControllerTests {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -71,65 +75,19 @@ class OrdersApiControllerTests {
 	}
 
 	@Test
-	void givenAcceptJson_whenGetShow_thenRootIdIsHidden() throws Exception {
-		Order order = new Order(42L);
-		given(this.allOrders.findById(any())).willReturn(Optional.of(order));
-
-		// @formatter:off
-		this.mockMvc.perform(get("/api/orders/{id}", 42).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").doesNotExist());
-		// @formatter:on
-
-		then(this.allOrders).should().findById(42L);
-	}
-
-	@Test
-	void givenAcceptJson_whenGetShow_thenChildItemIdsAreIncluded() throws Exception {
-		Order order = new Order(42L);
-		order.setItems(new ArrayList<>(3));
-		OrderItem orderItem;
-		orderItem = new OrderItem();
-		orderItem.setId(420L);
-		order.getItems().add(orderItem);
-		orderItem = new OrderItem();
-		orderItem.setId(421L);
-		order.getItems().add(orderItem);
-		orderItem = new OrderItem();
-		orderItem.setId(422L);
-		order.getItems().add(orderItem);
-
-		given(this.allOrders.findById(any())).willReturn(Optional.of(order));
-
-		// @formatter:off
-		this.mockMvc.perform(get("/api/orders/{id}", 42).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.items").exists())
-				.andExpect(jsonPath("$.items").isArray())
-				.andExpect(jsonPath("$.items[0].id").value(420))
-				.andExpect(jsonPath("$.items[1].id").value(421))
-				.andExpect(jsonPath("$.items[2].id").value(422));
-		// @formatter:on
-
-		then(this.allOrders).should().findById(42L);
-	}
-
-	@Test
-	void givenJson_whenPostSave_thenBiDirectionalAssociationsAreHandled() throws Exception {
+	void givenFormUrlEncoded_whenPostSave_thenBiDirectionalAssociationsAreHandled() throws Exception {
 		given(this.allOrders.save(any())).will(returnFirstArg());
 
 		// @formatter:off
-		this.mockMvc.perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON)
-					.content("{ \"items\": ["
-							+ "{ \"product\": { \"id\": 7 }, \"quantity\": 2 },"
-							+ "{ \"product\": { \"id\": 8 }, \"quantity\": 1 },"
-							+ "{ \"product\": { \"id\": 9 }, \"quantity\": 1 }"
-							+ "] }"))
-				.andExpect(status().isCreated());
+		this.mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.param("items[0].product.id", "7")
+					.param("items[0].quantity", "2")
+					.param("items[1].product.id", "8")
+					.param("items[1].quantity", "1")
+					.param("items[2].product.id", "9")
+					.param("items[2].quantity", "1"))
+				.andExpect(redirectedUrl("/orders"));
 		// @formatter:on
-
-		// Using @JsonManagedReference and @JsonBackReference makes
-		// Jackson handle the bi-directional associations.
 
 		then(this.allOrders).should().save(this.savedOrder.capture());
 
@@ -153,22 +111,23 @@ class OrdersApiControllerTests {
 	}
 
 	@Test
-	void givenJson_whenPutUpdate_thenBiDirectionalAssociationsAreHandled() throws Exception {
+	void givenFormUrlEncoded_whenPutUpdate_thenBiDirectionalAssociationsAreHandled() throws Exception {
 		given(this.allOrders.save(any())).will(returnFirstArg());
 
 		// @formatter:off
 		this.mockMvc
-				.perform(put("/api/orders/{id}", 42).contentType(MediaType.APPLICATION_JSON)
-						.content("{ \"items\": ["
-								+ "{ \"id\": 420, \"product\": { \"id\": 7 }, \"quantity\": 2 },"
-								+ "{ \"id\": 421, \"product\": { \"id\": 8 }, \"quantity\": 1 },"
-								+ "{ \"product\": { \"id\": 9 }, \"quantity\": 1 }"
-								+ "] }"))
-				.andExpect(status().isNoContent());
+				.perform(put("/orders/{id}", 42).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.param("items[0].id", "420")
+					.param("items[0].product.id", "7")
+					.param("items[0].quantity", "2")
+					.param("items[1].id", "421")
+					.param("items[1].product.id", "8")
+					.param("items[1].quantity", "1")
+					// .param("items[2].id", "") // new item
+					.param("items[2].product.id", "9")
+					.param("items[2].quantity", "1"))
+				.andExpect(redirectedUrl("/orders"));
 		// @formatter:on
-
-		// Using @JsonManagedReference and @JsonBackReference makes
-		// Jackson handle the bi-directional associations.
 
 		then(this.allOrders).should().save(this.savedOrder.capture());
 

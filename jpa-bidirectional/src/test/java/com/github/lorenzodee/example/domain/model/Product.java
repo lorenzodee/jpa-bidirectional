@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.lorenzodee.example;
+package com.github.lorenzodee.example.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
