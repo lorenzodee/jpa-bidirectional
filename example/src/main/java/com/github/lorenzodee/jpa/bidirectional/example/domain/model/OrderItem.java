@@ -18,6 +18,7 @@ package com.github.lorenzodee.jpa.bidirectional.example.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,12 +26,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(name = "order_items", uniqueConstraints = { @UniqueConstraint(columnNames = { "order_id", "product_id" }) })
+@Table(name = "order_items")
 @SequenceGenerator(name = "order_item_seq", sequenceName = "order_item_seq", allocationSize = 5)
 public class OrderItem {
 
@@ -44,7 +45,7 @@ public class OrderItem {
 	@JsonBackReference
 	private Order order;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
@@ -68,10 +69,11 @@ public class OrderItem {
 		return this.order;
 	}
 
-	protected void setOrder(Order order) {
+	public void setOrder(Order order) {
 		this.order = order;
 	}
 
+	@JsonView({ Order.Views.Summary.class, Order.Views.Detail.class })
 	public Product getProduct() {
 		return this.product;
 	}
@@ -80,6 +82,7 @@ public class OrderItem {
 		this.product = product;
 	}
 
+	@JsonView({ Order.Views.Summary.class, Order.Views.Detail.class })
 	public int getQuantity() {
 		return this.quantity;
 	}

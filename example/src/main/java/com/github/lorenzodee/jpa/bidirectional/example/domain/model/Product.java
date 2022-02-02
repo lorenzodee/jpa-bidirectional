@@ -21,11 +21,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "products")
+@NamedQuery(name = "Product.provideOptions",
+	query = "SELECT p.id AS value, p.title AS label FROM Product p ORDER BY p.title ASC")
 @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
 public class Product {
 
@@ -43,10 +48,16 @@ public class Product {
 		this.id = id;
 	}
 
+	@JsonView({ Order.Views.Summary.class, Order.Views.Detail.class })
 	public Long getId() {
 		return this.id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@JsonView(Order.Views.Detail.class)
 	public String getTitle() {
 		return this.title;
 	}

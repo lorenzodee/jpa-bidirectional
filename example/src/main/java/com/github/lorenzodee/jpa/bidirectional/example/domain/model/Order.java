@@ -24,20 +24,37 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * Order aggregate root.
  *
  * @author Lorenzo Dee
+ * @see Orders
  */
 @Entity
 @Table(name = "orders")
+// @formatter:off
+@NamedEntityGraph(name = "Order.graphWithItemsOnly", attributeNodes = {
+		@NamedAttributeNode("items")
+	})
+@NamedEntityGraph(name = "Order.graphWithItemsAndProductOnly", attributeNodes = {
+		@NamedAttributeNode(value = "items", subgraph = "Order.graph.items.product")
+	}, subgraphs = {
+		@NamedSubgraph(name = "Order.graph.items.product", attributeNodes = {
+			@NamedAttributeNode("product")
+		})
+	})
+// @formatter:on
 @SequenceGenerator(name = "order_seq", sequenceName = "order_seq", allocationSize = 1)
 public class Order {
 
@@ -117,6 +134,7 @@ public class Order {
 	}
 	*/
 
+	@JsonView({ Views.Summary.class, Views.Detail.class })
 	public List<OrderItem> getItems() {
 		// No need to return a "copy" or "defensive copy"
 		return this.items;
@@ -127,6 +145,7 @@ public class Order {
 		this.items = items;
 	}
 
+	/*
 	public void handleBiDirectionalAssociations() {
 		if (this.items != null) {
 			this.items.forEach((item) -> {
@@ -136,5 +155,12 @@ public class Order {
 			});
 		}
 	}
+	*/
 
+	public interface Views {
+		public interface Summary {
+		}
+		public interface Detail {
+		}
+	}
 }

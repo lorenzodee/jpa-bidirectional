@@ -38,8 +38,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Order;
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Orders;
+import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Orders.OrderAndItemsCount;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -49,20 +52,23 @@ class OrdersApiController {
 	Orders allOrders;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<Page<Order>> index(Pageable pageable) {
-		return ResponseEntity.ok(this.allOrders.findAll(pageable));
+	ResponseEntity<Page<OrderAndItemsCount>> index(Pageable pageable) {
+		return ResponseEntity.ok(this.allOrders.queryAll(pageable));
 	}
 
 	@GetMapping(path = "/{id:\\d+}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@JsonView(Order.Views.Detail.class)
 	ResponseEntity<Order> show(@PathVariable Long id) {
 		/*
 		return this.allOrders.findById(id)
 			.map((order) -> ResponseEntity.ok(order))
 			.orElseGet(() -> ResponseEntity.notFound().build());
 		*/
-		return ResponseEntity.of(this.allOrders.findById(id));
+		return ResponseEntity.of(this.allOrders.findWithItemsAndProductById(id));
 	}
 
+	// TODO Use @JsonView to determine which properties are allowed
+	// So that malicious users cannot inject values into bound objects
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<Void> save(@RequestBody @Valid Order order, BindingResult bindingResult,
 			UriComponentsBuilder uriBuilder) {
@@ -81,6 +87,8 @@ class OrdersApiController {
 		return ResponseEntity.created(location).build();
 	}
 
+	// TODO Use @JsonView to determine which properties are allowed
+	// So that malicious users cannot inject values into bound objects
 	@PutMapping(path = "/{id:\\d+}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid Order order, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {

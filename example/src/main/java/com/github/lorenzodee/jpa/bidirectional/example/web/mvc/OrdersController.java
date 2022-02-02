@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Order;
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Orders;
+import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Products;
 
 @Controller
 @RequestMapping("/orders")
@@ -48,29 +50,34 @@ class OrdersController {
 
 	@Autowired
 	Orders allOrders;
+	@Autowired
+	Products allProducts;
 
 	@Autowired
 	MessageSource messageSource;
 
 	// If direct field access is to be the default, move this to a @ControllerAdvice
 	@InitBinder
-	void initBinder(WebDataBinder binder) {
-		binder.initDirectFieldAccess();
+	void initBinder(WebDataBinder binder, HttpMethod httpMethod) {
+		if (httpMethod != HttpMethod.GET) {
+			// Direct field access bypasses JPA/Hibernate lazy-loading proxies and return
+			// wrong null values. We only apply it during non-GET requests, where the model
+			// is not loaded by JPA/Hibernate which guarantees there are no proxies.
+			binder.initDirectFieldAccess();
+		}
 	}
 
 	@GetMapping
 	String index(Pageable pageable, Model model) {
-		// Or, use this.allOrders.queryAll(pageable) for a projection
-		model.addAttribute("ordersPage", this.allOrders.findAll(pageable));
+		model.addAttribute("ordersPage", this.allOrders.queryAll(pageable));
 		// In the view, use ${ordersPage.content} to get List<Order>
 		return "orders/index";
 	}
 
 	@GetMapping("/{id}")
 	String show(@PathVariable Long id, Model model) {
-		// Or, use this.allOrders.queryById(id) for a projection
 		model.addAttribute("order",
-				this.allOrders.findById(id)
+				this.allOrders.findWithItemsAndProductById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 		return "orders/show";
 	}
@@ -112,9 +119,9 @@ class OrdersController {
 
 	@GetMapping("/{id:\\d+}/edit")
 	String edit(@PathVariable Long id, Model model) {
-		model.addAttribute("order",
-				this.allOrders.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+		Order order = this.allOrders.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		model.addAttribute("order", order);
 		// Also provide models to support the <form> (e.g. drop lists)
 		prepareFormModels(model);
 		return "orders/edit";
@@ -146,6 +153,7 @@ class OrdersController {
 
 	void prepareFormModels(Model model) {
 		// Provide models to support the create/edit <form> (e.g. drop lists)
+		model.addAttribute("products", this.allProducts.provideOptions());
 	}
 
 	@DeleteMapping("/{id:\\d+}")
