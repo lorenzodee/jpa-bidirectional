@@ -31,16 +31,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class BiDirectionalAssociationsHandlerImplTests {
+class BidirectionalAssociationsHandlerImplTests {
 
 	@Autowired
 	TestEntityManager entityManager;
 
-	BiDirectionalAssociationsHandlerImpl handler;
+	BidirectionalAssociationsHandlerImpl handler;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		handler = new BiDirectionalAssociationsHandlerImpl(
+		handler = new BidirectionalAssociationsHandlerImpl(
 				entityManager.getEntityManager());
 	}
 
@@ -50,7 +50,7 @@ class BiDirectionalAssociationsHandlerImplTests {
 
 	@Test
 	void safelyIgnoresNonEntities() throws Exception {
-		handler.handleBiDirectionalAssociations(new Object());
+		handler.handleBidirectionalAssociations(new Object());
 	}
 
 	// TODO Support non-entity types that contain entities
@@ -82,7 +82,7 @@ class BiDirectionalAssociationsHandlerImplTests {
 			parent.getChildren().add(child3);
 			child3.setGrandChildren(new LinkedList<>());
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			parent.getChildren().forEach((child) -> {
 				assertThat(child.getParent())
@@ -103,7 +103,7 @@ class BiDirectionalAssociationsHandlerImplTests {
 			ParentItem item1 = new ParentItem();
 			parent.getItems().add(item1);
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			// passes if handler succeeds
 		}
@@ -131,7 +131,7 @@ class BiDirectionalAssociationsHandlerImplTests {
 			parent.getChildren().add(child3);
 			child3.setGrandChildren(new LinkedList<>());
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			parent.getChildren().forEach((child) -> {
 				assertThat(child.getParent())
@@ -152,7 +152,7 @@ class BiDirectionalAssociationsHandlerImplTests {
 			ParentItem2 item1 = new ParentItem2();
 			parent.getItems().add(item1);
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			// passes if handler succeeds
 		}
@@ -165,10 +165,10 @@ class BiDirectionalAssociationsHandlerImplTests {
 		@Test
 		void handlesOneToOneBiDirectionalFieldAccess() throws Exception {
 			Parent parent = new Parent();
-			ParentOneBiDirectional oneBiDirectional = new ParentOneBiDirectional();
+			ParentOneBidirectional oneBiDirectional = new ParentOneBidirectional();
 			parent.setOneBiDirectional(oneBiDirectional);
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			assertThat(parent.getOneBiDirectional().getParent()).isSameAs(parent);
 		}
@@ -176,10 +176,10 @@ class BiDirectionalAssociationsHandlerImplTests {
 		@Test
 		void ignoresOneToOneUniDirectionalFieldAccess() throws Exception {
 			Parent parent = new Parent();
-			ParentOneUniDirectional oneUniDirectional = new ParentOneUniDirectional();
+			ParentOneUnidirectional oneUniDirectional = new ParentOneUnidirectional();
 			parent.setOneUniDirectional(oneUniDirectional);
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			// passes if handler succeeds
 		}
@@ -187,10 +187,10 @@ class BiDirectionalAssociationsHandlerImplTests {
 		@Test
 		void handlesOneToOneBiDirectionalPropertyAccess() throws Exception {
 			Parent2 parent = new Parent2();
-			Parent2OneBiDirectional oneBiDirectional = new Parent2OneBiDirectional();
+			Parent2OneBidirectional oneBiDirectional = new Parent2OneBidirectional();
 			parent.setOneBiDirectional(oneBiDirectional);
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			assertThat(parent.getOneBiDirectional().getParent()).isSameAs(parent);
 		}
@@ -198,10 +198,10 @@ class BiDirectionalAssociationsHandlerImplTests {
 		@Test
 		void ignoresOneToOneUniDirectionalPropertyAccess() throws Exception {
 			Parent2 parent = new Parent2();
-			Parent2OneUniDirectional oneUniDirectional = new Parent2OneUniDirectional();
+			Parent2OneUnidirectional oneUniDirectional = new Parent2OneUnidirectional();
 			parent.setOneUniDirectional(oneUniDirectional);
 
-			handler.handleBiDirectionalAssociations(parent);
+			handler.handleBidirectionalAssociations(parent);
 
 			// passes if handler succeeds
 		}

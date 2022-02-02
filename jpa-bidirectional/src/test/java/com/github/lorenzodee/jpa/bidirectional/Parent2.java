@@ -31,8 +31,8 @@ public class Parent2 {
 	private Long id;
 	private List<Child2> children;
 	private List<ParentItem2> items;
-	private Parent2OneBiDirectional oneBiDirectional;
-	private Parent2OneUniDirectional oneUniDirectional;
+	private Parent2OneBidirectional oneBiDirectional;
+	private Parent2OneUnidirectional oneUniDirectional;
 
 	public Parent2() {
 	}
@@ -71,20 +71,20 @@ public class Parent2 {
 	}
 
 	@OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-	public Parent2OneBiDirectional getOneBiDirectional() {
+	public Parent2OneBidirectional getOneBiDirectional() {
 		return this.oneBiDirectional;
 	}
 
-	public void setOneBiDirectional(Parent2OneBiDirectional oneBiDirectional) {
+	public void setOneBiDirectional(Parent2OneBidirectional oneBiDirectional) {
 		this.oneBiDirectional = oneBiDirectional;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	public Parent2OneUniDirectional getOneUniDirectional() {
+	public Parent2OneUnidirectional getOneUniDirectional() {
 		return this.oneUniDirectional;
 	}
 
-	public void setOneUniDirectional(Parent2OneUniDirectional oneUniDirectional) {
+	public void setOneUniDirectional(Parent2OneUnidirectional oneUniDirectional) {
 		this.oneUniDirectional = oneUniDirectional;
 	}
 

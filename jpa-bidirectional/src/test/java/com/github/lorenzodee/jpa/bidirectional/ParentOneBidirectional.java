@@ -14,23 +14,40 @@
  * limitations under the License.
  */
 
-package com.github.lorenzodee.jpa.bidirectional.example;
+package com.github.lorenzodee.jpa.bidirectional;
 
-import javax.persistence.EntityManager;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+@Entity
+public class ParentOneBidirectional {
 
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandler;
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandlerImpl;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-@Configuration
-public class BiDirectionalAssociationsHandlerConfiguration {
+	@OneToOne
+	private Parent parent;
 
-	@Bean
-	public BiDirectionalAssociationsHandler bidirectionalAssociationsHandler(
-			EntityManager entityManager) {
-		return new BiDirectionalAssociationsHandlerImpl(entityManager);
+	public ParentOneBidirectional() {
+	}
+
+	public ParentOneBidirectional(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public Parent getParent() {
+		return this.parent;
+	}
+
+	public void setParent(Parent parent) {
+		this.parent = parent;
 	}
 
 }

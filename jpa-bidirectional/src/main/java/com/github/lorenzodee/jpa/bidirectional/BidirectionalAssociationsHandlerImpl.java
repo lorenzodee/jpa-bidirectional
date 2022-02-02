@@ -45,27 +45,27 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * This {@link BiDirectionalAssociationsHandler} implementation uses JPA
+ * This {@link BidirectionalAssociationsHandler} implementation uses JPA
  * {@link Metamodel} to scan for bi-directional <code>OneTo*</code> associations
  * and uses Spring {@link ReflectionUtils} to set the back reference.
  *
  * @author Lorenzo Dee
  */
-public class BiDirectionalAssociationsHandlerImpl implements BiDirectionalAssociationsHandler {
+public class BidirectionalAssociationsHandlerImpl implements BidirectionalAssociationsHandler {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final EntityManager entityManager;
 	private final Map<Class<?>, List<Attribute<?, ?>>> managedAttributesByManagedClass;
 
-	public BiDirectionalAssociationsHandlerImpl(EntityManager entityManager) {
+	public BidirectionalAssociationsHandlerImpl(EntityManager entityManager) {
 		super();
 		this.entityManager = entityManager;
 		this.managedAttributesByManagedClass = new ConcurrentHashMap<>();
 	}
 
 	@Override
-	public void handleBiDirectionalAssociations(Object entity) {
+	public void handleBidirectionalAssociations(Object entity) {
 		Class<? extends Object> entityClass = entity.getClass();
 		List<Attribute<?, ?>> managedAttributes = this.managedAttributesByManagedClass.get(entityClass);
 		if (managedAttributes == null) {
@@ -112,7 +112,7 @@ public class BiDirectionalAssociationsHandlerImpl implements BiDirectionalAssoci
 		}
 		// Handle nested entities (if any)
 		for (Object nestedEntity : nestedEntities) {
-			handleBiDirectionalAssociations(nestedEntity);
+			handleBidirectionalAssociations(nestedEntity);
 		}
 	}
 

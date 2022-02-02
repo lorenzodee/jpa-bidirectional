@@ -20,7 +20,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor;
 
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandler;
+import com.github.lorenzodee.jpa.bidirectional.BidirectionalAssociationsHandler;
 
 /**
  * A JPA-specific {@link ServletModelAttributeMethodProcessor} that handles
@@ -29,18 +29,18 @@ import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandler;
  * HandlerMethodArgumentResolver}).
  *
  * @author Lorenzo Dee
- * @see BiDirectionalAssociationsHandler
+ * @see BidirectionalAssociationsHandler
  */
 public class JpaModelAttributeMethodProcessor extends ServletModelAttributeMethodProcessor {
 
 	// Could not delegate to a ServletModelAttributeMethodProcessor because
 	// bindRequestParameters() needs to be overridden.
 
-	private final BiDirectionalAssociationsHandler bidirectionalAssociationsHandler;
+	private final BidirectionalAssociationsHandler bidirectionalAssociationsHandler;
 
 	public JpaModelAttributeMethodProcessor(
 			boolean annotationNotRequired,
-			BiDirectionalAssociationsHandler bidirectionalAssociationsHandler) {
+			BidirectionalAssociationsHandler bidirectionalAssociationsHandler) {
 		super(annotationNotRequired);
 		this.bidirectionalAssociationsHandler = bidirectionalAssociationsHandler;
 	}
@@ -55,7 +55,7 @@ public class JpaModelAttributeMethodProcessor extends ServletModelAttributeMetho
 		Object entity = binder.getTarget();
 		if (entity != null) {
 			this.bidirectionalAssociationsHandler
-					.handleBiDirectionalAssociations(entity);
+					.handleBidirectionalAssociations(entity);
 		}
 	}
 

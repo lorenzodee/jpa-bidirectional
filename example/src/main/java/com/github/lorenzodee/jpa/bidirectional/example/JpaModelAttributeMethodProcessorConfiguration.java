@@ -26,7 +26,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor;
 
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandler;
+import com.github.lorenzodee.jpa.bidirectional.BidirectionalAssociationsHandler;
 import com.github.lorenzodee.jpa.bidirectional.web.servlet.mvc.JpaModelAttributeMethodProcessor;
 
 @Configuration
@@ -35,7 +35,7 @@ public class JpaModelAttributeMethodProcessorConfiguration {
 	@Autowired
 	public void replaceServletModelAttributeMethodProcessors(
 			RequestMappingHandlerAdapter requestMappingHandlerAdapter,
-			BiDirectionalAssociationsHandler bidirectionalAssociationsHandler) {
+			BidirectionalAssociationsHandler bidirectionalAssociationsHandler) {
 		List<HandlerMethodArgumentResolver> resolvers = requestMappingHandlerAdapter.getArgumentResolvers();
 		List<HandlerMethodArgumentResolver> replacedResolvers = resolvers.stream().map((resolver) -> {
 			if (resolver instanceof ServletModelAttributeMethodProcessor) {

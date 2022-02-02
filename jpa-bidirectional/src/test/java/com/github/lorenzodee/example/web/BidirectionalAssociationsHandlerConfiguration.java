@@ -21,16 +21,16 @@ import javax.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandler;
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandlerImpl;
+import com.github.lorenzodee.jpa.bidirectional.BidirectionalAssociationsHandler;
+import com.github.lorenzodee.jpa.bidirectional.BidirectionalAssociationsHandlerImpl;
 
 @Configuration
-public class BiDirectionalAssociationsHandlerConfiguration {
+public class BidirectionalAssociationsHandlerConfiguration {
 
 	@Bean
-	public BiDirectionalAssociationsHandler bidirectionalAssociationsHandler(
+	public BidirectionalAssociationsHandler bidirectionalAssociationsHandler(
 			EntityManager entityManager) {
-		return new BiDirectionalAssociationsHandlerImpl(entityManager);
+		return new BidirectionalAssociationsHandlerImpl(entityManager);
 	}
 
 }

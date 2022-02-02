@@ -19,16 +19,18 @@ package com.github.lorenzodee.jpa.bidirectional;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
-public class Parent2OneUniDirectional {
+public class Parent2OneBidirectional {
 
 	private Long id;
+	private Parent2 parent;
 
-	public Parent2OneUniDirectional() {
+	public Parent2OneBidirectional() {
 	}
 
-	public Parent2OneUniDirectional(Long id) {
+	public Parent2OneBidirectional(Long id) {
 		this.id = id;
 	}
 
@@ -40,6 +42,15 @@ public class Parent2OneUniDirectional {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@OneToOne
+	public Parent2 getParent() {
+		return this.parent;
+	}
+
+	public void setParent(Parent2 parent) {
+		this.parent = parent;
 	}
 
 }

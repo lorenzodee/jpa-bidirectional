@@ -37,7 +37,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.ServletRequestDataBinderFactory;
 
-import com.github.lorenzodee.jpa.bidirectional.BiDirectionalAssociationsHandler;
+import com.github.lorenzodee.jpa.bidirectional.BidirectionalAssociationsHandler;
 import com.github.lorenzodee.jpa.bidirectional.Parent;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +51,7 @@ class JpaModelAttributeMethodProcessorTests {
 	JpaModelAttributeMethodProcessor processor;
 
 	@Mock
-	BiDirectionalAssociationsHandler bidirectionalAssociationsHandler;
+	BidirectionalAssociationsHandler bidirectionalAssociationsHandler;
 	MethodParameter parameter;
 	MethodParameter optionalParameter;
 	ModelAndViewContainer mavContainer;
@@ -101,7 +101,7 @@ class JpaModelAttributeMethodProcessorTests {
 				parameter, mavContainer, webRequest, binderFactory);
 
 		then(bidirectionalAssociationsHandler).should()
-				.handleBiDirectionalAssociations(same(object1));
+				.handleBidirectionalAssociations(same(object1));
 
 		reset(bidirectionalAssociationsHandler);
 
@@ -109,7 +109,7 @@ class JpaModelAttributeMethodProcessorTests {
 				optionalParameter, mavContainer, webRequest, binderFactory);
 
 		then(bidirectionalAssociationsHandler).should()
-				.handleBiDirectionalAssociations(same(((Optional<?>) object2).get()));
+				.handleBidirectionalAssociations(same(((Optional<?>) object2).get()));
 	}
 
 	@SuppressWarnings("unused")

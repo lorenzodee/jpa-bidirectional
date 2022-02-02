@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.lorenzodee.example.domain.model.Order;
 import com.github.lorenzodee.example.domain.model.OrderItem;
 import com.github.lorenzodee.example.domain.model.Orders;
-import com.github.lorenzodee.example.web.BiDirectionalAssociationsHandlerConfiguration;
+import com.github.lorenzodee.example.web.BidirectionalAssociationsHandlerConfiguration;
 import com.github.lorenzodee.example.web.JpaModelAttributeMethodProcessorConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureDataJpa
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
-@Import({ BiDirectionalAssociationsHandlerConfiguration.class,
+@Import({ BidirectionalAssociationsHandlerConfiguration.class,
 	JpaModelAttributeMethodProcessorConfiguration.class })
 class OrdersControllerTests {
 

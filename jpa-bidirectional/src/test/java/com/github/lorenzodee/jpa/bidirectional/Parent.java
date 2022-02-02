@@ -40,10 +40,10 @@ public class Parent {
 	private List<ParentItem> items;
 
 	@OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-	private ParentOneBiDirectional oneBiDirectional;
+	private ParentOneBidirectional oneBiDirectional;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	private ParentOneUniDirectional oneUniDirectional;
+	private ParentOneUnidirectional oneUniDirectional;
 
 	public Parent() {
 	}
@@ -72,19 +72,19 @@ public class Parent {
 		this.items = items;
 	}
 
-	public ParentOneBiDirectional getOneBiDirectional() {
+	public ParentOneBidirectional getOneBiDirectional() {
 		return this.oneBiDirectional;
 	}
 
-	public void setOneBiDirectional(ParentOneBiDirectional oneBiDirectional) {
+	public void setOneBiDirectional(ParentOneBidirectional oneBiDirectional) {
 		this.oneBiDirectional = oneBiDirectional;
 	}
 
-	public ParentOneUniDirectional getOneUniDirectional() {
+	public ParentOneUnidirectional getOneUniDirectional() {
 		return this.oneUniDirectional;
 	}
 
-	public void setOneUniDirectional(ParentOneUniDirectional oneUniDirectional) {
+	public void setOneUniDirectional(ParentOneUnidirectional oneUniDirectional) {
 		this.oneUniDirectional = oneUniDirectional;
 	}
 

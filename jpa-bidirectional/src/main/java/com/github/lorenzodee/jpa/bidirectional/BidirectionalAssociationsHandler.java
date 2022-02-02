@@ -22,12 +22,12 @@ package com.github.lorenzodee.jpa.bidirectional;
  *
  * @author Lorenzo Dee
  */
-public interface BiDirectionalAssociationsHandler {
+public interface BidirectionalAssociationsHandler {
 
 	/**
 	 * Handles the JPA bi-directional associations in the given entity.
 	 * @param entity the given entity
 	 */
-	void handleBiDirectionalAssociations(Object entity);
+	void handleBidirectionalAssociations(Object entity);
 
 }

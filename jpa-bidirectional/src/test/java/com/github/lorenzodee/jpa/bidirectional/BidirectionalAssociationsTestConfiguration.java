@@ -16,26 +16,13 @@
 
 package com.github.lorenzodee.jpa.bidirectional;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 
-@Entity
-public class ParentOneUniDirectional {
-
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	public ParentOneUniDirectional() {
-	}
-
-	public ParentOneUniDirectional(Long id) {
-		this.id = id;
-	}
-
-	public Long getId() {
-		return this.id;
-	}
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan
+public class BidirectionalAssociationsTestConfiguration {
 
 }
