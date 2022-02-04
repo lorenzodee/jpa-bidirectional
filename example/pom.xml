@@ -16,6 +16,8 @@
 	<description>A Spring Web example that demonstrates the use of JPA Bi-Directional.</description>
 	<properties>
 		<java.version>11</java.version>
+		<webjars-locator.version>0.42</webjars-locator.version>
+		<bootstrap.version>4.6.1</bootstrap.version>
 		<spring-javaformat.version>0.0.29</spring-javaformat.version>
 	</properties>
 	<dependencies>
@@ -23,6 +25,18 @@
 			<groupId>com.github.lorenzodee</groupId>
 			<artifactId>jpa-bidirectional</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<!-- WebJars -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator</artifactId>
+			<version>${webjars-locator.version}</version>
+		</dependency>
+		<!-- CSS Framework (via WebJars) -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>${bootstrap.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.tomcat.embed</groupId>

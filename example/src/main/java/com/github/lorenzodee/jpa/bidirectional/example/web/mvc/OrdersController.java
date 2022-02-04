@@ -41,6 +41,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Order;
+import com.github.lorenzodee.jpa.bidirectional.example.domain.model.OrderItem;
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Orders;
 import com.github.lorenzodee.jpa.bidirectional.example.domain.model.Products;
 
@@ -154,6 +155,7 @@ class OrdersController {
 	void prepareFormModels(Model model) {
 		// Provide models to support the create/edit <form> (e.g. drop lists)
 		model.addAttribute("products", this.allProducts.provideOptions());
+		model.addAttribute("newOrderItem", new OrderItem());
 	}
 
 	@DeleteMapping("/{id:\\d+}")

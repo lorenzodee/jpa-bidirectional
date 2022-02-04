@@ -4,36 +4,48 @@
 		<spring:url value="/orders/{id}" var="action">
 			<spring:param name="id" value="${order.id}" />
 		</spring:url>
-		<c:set var="method" value="put" />
+		<c:set value="put" var="method" />
+		<c:set value="edit" var="idPrefix" />
 	</c:when>
 	<c:otherwise>
 		<spring:url value="/orders" var="action" />
-		<c:set var="method" value="post" />
+		<c:set value="post" var="method" />
+		<c:set value="create" var="idPrefix" />
 	</c:otherwise>
 </c:choose>
-<form:form method="${method}" action="${action}" modelAttribute="order">
-	<table>
+<form:form id="${idPrefix}_order" method="${method}" action="${action}" modelAttribute="order" data-nested-reindex="1">
+	<%-- jsp:include page="_formfields_order.jsp" / --%>
+	<table class="table table-borderless table-sm">
+		<colgroup>
+			<col><!-- occupy remaining space -->
+			<col style="width: 25%">
+			<col style="width: 25%">
+		</colgroup>
 		<tr>
-			<th>Product</th>
-			<th>Quantity</th>
+			<th scope="col">Product</th>
+			<th scope="col">Quantity</th>
+			<th scope="col" class="align-middle">
+				<span class="sr-only">Actions</span>
+				<button type="button" class="btn btn-secondary btn-sm"
+					data-nested-add="items"
+					data-nested-next-index="${order.items.size()}"
+					data-nested-template-id="new_nestedOrderItem"
+					data-nested-template-content-selector="tr"
+					data-nested-insert="#${idPrefix}_order table tr:last-child"
+					data-nested-insert-method="after">Add</button>
+			</th>
 		</tr>
 		<c:forEach items="${order.items}" var="item" varStatus="itemStatus">
-		<tr>
-			<td>
-				<form:hidden path="items[${itemStatus.index}].id" />
-				<%-- WARNING: When using direct field access, JPA lazy loading proxies will cause null values to be returned --%>
-				<form:select path="items[${itemStatus.index}].product.id">
-					<form:options items="${products}" itemLabel="label" itemValue="value" />
-				</form:select>
-			</td>
-			<td>
-				<form:input path="items[${itemStatus.index}].quantity" type="number" />
-			</td>
-		</tr>
+			<%-- Note: "nestedPath" is being used by spring-form --%>
+			<%-- So, we use it to our advantage, and restore it later --%>
+			<c:set var="_nestedPath" scope="request" value="${nestedPath}" />
+			<c:set var="nestedPath" scope="request" value="${nestedPath}items[${itemStatus.index}]." />
+				<jsp:include page="_formfields_orderItem.jsp" />
+			<c:set var="nestedPath" scope="request" value="${_nestedPath}" />
 		</c:forEach>
 	</table>
-	<div>
-		<button>Save</button>
-		<a href="/orders">Cancel</a>
+	<div class="form-group">
+		<button class="btn btn-success">Save</button>
+		<a href="/orders" class="btn btn-secondary">Cancel</a>
 	</div>
 </form:form>

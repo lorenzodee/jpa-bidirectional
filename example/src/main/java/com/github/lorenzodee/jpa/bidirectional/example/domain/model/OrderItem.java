@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "order_items")
-@SequenceGenerator(name = "order_item_seq", sequenceName = "order_item_seq", allocationSize = 5)
+@SequenceGenerator(name = "order_item_seq", sequenceName = "order_item_seq", allocationSize = 1)
 public class OrderItem {
 
 	@Id

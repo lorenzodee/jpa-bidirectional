@@ -6,7 +6,7 @@ DROP SEQUENCE order_item_seq IF EXISTS;
 DROP SEQUENCE order_seq IF EXISTS;
 DROP SEQUENCE product_seq IF EXISTS;
 
-CREATE SEQUENCE order_item_seq start with 1 increment by 5;
+CREATE SEQUENCE order_item_seq start with 1 increment by 1;
 CREATE SEQUENCE order_seq start with 1 increment by 1;
 CREATE SEQUENCE product_seq start with 1 increment by 1;
 
