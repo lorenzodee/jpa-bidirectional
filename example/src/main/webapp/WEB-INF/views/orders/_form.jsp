@@ -36,12 +36,9 @@
 			</th>
 		</tr>
 		<c:forEach items="${order.items}" var="item" varStatus="itemStatus">
-			<%-- Note: "nestedPath" is being used by spring-form --%>
-			<%-- So, we use it to our advantage, and restore it later --%>
-			<c:set var="_nestedPath" scope="request" value="${nestedPath}" />
-			<c:set var="nestedPath" scope="request" value="${nestedPath}items[${itemStatus.index}]." />
+			<spring:nestedPath path="items[${itemStatus.index}]">
 				<jsp:include page="_formfields_orderItem.jsp" />
-			<c:set var="nestedPath" scope="request" value="${_nestedPath}" />
+			</spring:nestedPath>
 		</c:forEach>
 	</table>
 	<div class="form-group">
