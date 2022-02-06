@@ -26,6 +26,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -47,9 +49,11 @@ public class OrderItem {
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
+	@Valid
 	private Product product;
 
 	@Column(name = "quantity", nullable = false)
+	@Min(value = 1, groups = { Order.ValidationGroups.class, Order.ValidationGroups.Edit.class })
 	private int quantity;
 
 	// Must provide a public/protected zero-args constructor.

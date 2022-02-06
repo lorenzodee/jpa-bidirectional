@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -37,7 +38,9 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
 	@Column(name = "product_id")
+	@NotNull(groups = { Order.ValidationGroups.class, Order.ValidationGroups.Edit.class })
 	private Long id;
+
 	@Column(name = "title")
 	private String title;
 

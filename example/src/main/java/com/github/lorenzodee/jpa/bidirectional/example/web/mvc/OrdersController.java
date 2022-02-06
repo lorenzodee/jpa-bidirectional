@@ -16,9 +16,8 @@
 
 package com.github.lorenzodee.jpa.bidirectional.example.web.mvc;
 
+import java.util.ArrayList;
 import java.util.Locale;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -29,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,14 +85,19 @@ class OrdersController {
 
 	@GetMapping("/create")
 	String create(Model model) {
-		model.addAttribute("order", new Order());
+		// New order starts with one blank item
+		Order order = new Order();
+		order.setItems(new ArrayList<>(1));
+		order.getItems().add(new OrderItem());
+		model.addAttribute("order", order);
 		// Also provide models to support the <form> (e.g. drop lists)
 		prepareFormModels(model);
 		return "orders/create";
 	}
 
 	@PostMapping
-	String save(@Valid Order order, BindingResult bindingResult,
+	String save(@Validated(Order.ValidationGroups.Edit.class) Order order,
+			BindingResult bindingResult,
 			Model model, RedirectAttributes redirectAttrs, Locale locale) {
 		if (bindingResult.hasErrors()) {
 			// Also provide models to support the <form> (e.g. drop lists)
@@ -129,7 +134,8 @@ class OrdersController {
 	}
 
 	@PutMapping("/{id:\\d+}")
-	String update(@Valid Order order, BindingResult bindingResult,
+	String update(@Validated(Order.ValidationGroups.Edit.class) Order order,
+			BindingResult bindingResult,
 			Model model, RedirectAttributes redirectAttrs, Locale locale) {
 		if (bindingResult.hasErrors()) {
 			// Also provide models to support the <form> (e.g. drop lists)
@@ -154,7 +160,7 @@ class OrdersController {
 
 	void prepareFormModels(Model model) {
 		// Provide models to support the create/edit <form> (e.g. drop lists)
-		model.addAttribute("products", this.allProducts.provideOptions());
+		model.addAttribute("productOptions", this.allProducts.provideOptions());
 		model.addAttribute("newOrderItem", new OrderItem());
 	}
 

@@ -30,6 +30,9 @@ import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -73,6 +76,9 @@ public class Order {
 	// If ordering is needed, use @OrderColumn.
 	@OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@NotNull(groups = { ValidationGroups.Create.class, ValidationGroups.Edit.class })
+	@Size(min = 1, groups = { ValidationGroups.Create.class, ValidationGroups.Edit.class })
+	@Valid
 	private List<OrderItem> items;
 
 	// As of Spring Web MVC 3.2, non-public zero-args constructors
@@ -85,14 +91,6 @@ public class Order {
 	public Order() {
 	}
 
-	// Alternatively, the `@Id` field can be effectively final and read-only.
-	// To do so, Spring MVC controllers must use direct field access to
-	// support x-www-form-urlencoded data binding, and the constructor
-	// must be annotated with `@JsonCreator` to allow Jackson to deserialize
-	// and set the `id` field properly. Unfortunately, Jackson will _not_
-	// use the designated `@JsonCreator` because there is an existing
-	// zero-args constructor.
-
 	public Order(Long id) {
 		this.id = id;
 	}
@@ -101,11 +99,12 @@ public class Order {
 		return this.id;
 	}
 
-	/*
-	public void setId(Long id) {
+	// Alternatively, the `@Id` field can be effectively final and read-only.
+	// To do so, the setter can be made protected.
+
+	protected void setId(Long id) {
 		this.id = id;
 	}
-	*/
 
 	// TODO Can we use a aggregate-specific ID type? E.g. OrderId
 	/*
@@ -157,10 +156,18 @@ public class Order {
 	}
 	*/
 
+	public interface ValidationGroups {
+		public interface Create {
+		}
+		public interface Edit {
+		}
+	}
+
 	public interface Views {
 		public interface Summary {
 		}
 		public interface Detail {
 		}
 	}
+
 }
