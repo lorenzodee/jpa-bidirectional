@@ -11,7 +11,7 @@
 	<groupId>com.github.lorenzodee</groupId>
 	<artifactId>jpa-bidirectional</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>jpa-bidirectional</name>
 	<description>Handle bi-directional associations after data binding in Spring Web</description>
 	<properties>
 		<java.version>11</java.version>
@@ -21,14 +21,17 @@
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
